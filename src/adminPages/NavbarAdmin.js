@@ -26,7 +26,7 @@ export default function NavbarAdmin() {
       <div className="w-42 relative item-center text-justify justify-center">
         <button 
       onClick={clickDropAdmin}
-      classNameName=''>
+      className=''>
       <img src='./assets/photo.jpg' alt="" className='h-12 rounded-full' />
       {dropAdmin ? (
         <div className='z-10 absolute right-0 top-full w-max bg-white shadow-md mt-1 rounded'>

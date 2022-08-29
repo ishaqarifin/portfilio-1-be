@@ -6,7 +6,7 @@ import {
   ChatAlt2Icon
 } from "@heroicons/react/outline"
 
-export default function Dropdown() {
+export default function Dropdown(logout) {
   const [drop,setDrop] = useState(false)
   const clickDrop = ()=> {
     if (drop) {
@@ -18,7 +18,7 @@ export default function Dropdown() {
   return (
     <button 
       onClick={clickDrop}
-      classNameName=''>
+      className=''>
       <img src='./assets/photo.jpg' alt="" className='h-12 rounded-full' />
       {drop ? (
         <div className='z-10 absolute right-0 top-full w-max bg-white shadow-md mt-1 rounded'>
@@ -36,7 +36,7 @@ export default function Dropdown() {
           </li>
           </Link>
           <Link to={'/'}>
-          <li className='flex items-center font-semibold px-4 py-3 hover:bg-gray-100 border-b-2'>
+          <li onClick={logout} className='flex items-center font-semibold px-4 py-3 hover:bg-gray-100 border-b-2'>
           <LogoutIcon className="h-6 text-sm mr-2 text-red-500" />
             Logout
           </li>

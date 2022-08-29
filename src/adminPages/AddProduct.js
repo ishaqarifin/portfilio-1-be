@@ -1,8 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { API } from "../config/api";
 import NavbarAdmin from "./NavbarAdmin";
+import {useMutation} from 'react-query'
 
 export default function AddProduct() {
-  // const [preview, setPreview] = useState(null); //For image preview
+  let navigate = useNavigate()
+  let api = API()
+  const [preview, setPreview] = useState(null); //For image preview
+  const [form, setForm] = useState({
+    Image: "",
+    name: "",
+    desc: "",
+    price: "",
+    qty: "",
+  })
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]:
+        e.target.type === "file" ? e.target.files : e.target.value,
+    });
+
+    // Create image url for preview
+    if (e.target.type === "file") {
+      let url = URL.createObjectURL(e.target.files[0]);
+      setPreview(url);
+    }
+  };
+
+  const handleSubmit = useMutation(async (e) => {
+    try {
+      e.preventDefault();
+
+      // Store data with FormData as object
+      const formData = new FormData();
+      formData.set("image", form?.image[0], form?.image[0]?.name);
+      formData.set("name", form.name);
+      formData.set("desc", form.desc);
+      formData.set("price", form.price);
+      formData.set("qty", form.qty);
+
+      // Configuration
+      const config = {
+        method: "POST",
+        headers: {
+          Authorization: "Basic " + localStorage.token,
+        },
+        body: formData,
+      };
+
+      // Insert product data
+      const response = await api.post("/product", config);
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   return (
     <>
       <NavbarAdmin />
@@ -10,42 +67,30 @@ export default function AddProduct() {
         <div className="w-80">
         <div className="font-bold text-orange-900">Add Product</div>
           <form
-          // onSubmit={(e) => handleSubmit.mutate(e)}
+          onSubmit={(e) => handleSubmit.mutate(e)}
           >
-            {/* {preview && (
-              <div>
-                <img
-                  src={preview}
-                  style={{
-                    maxWidth: "150px",
-                    maxHeight: "150px",
-                    objectFit: "cover",
-                  }}
-                  alt={preview}
-                />
-              </div>
-            )} */}
+            
             <div className="">
               <div className="mb-10 my-5">
                 <input
                   type="text"
                   placeholder="Name"
-                  name="title"
-                  // onChange={handleChange}
+                  name="name"
+                  onChange={handleChange}
                   className="shadow appearance-none border-2 rounded w-full py-2 px-3 border-amber-900 bg-orange-100 leading-tight focus:outline-none focus:shadow-outline"
                 />
                 <input
                   type="number"
                   placeholder="Stock"
                   name="qty"
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   className="my-3 shadow appearance-none border-2 rounded w-full py-2 px-3 border-amber-900 bg-orange-100 leading-tight focus:outline-none focus:shadow-outline"
                 />
                 <input
                   type="number"
                   name="price"
                   placeholder="Price"
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   className="shadow appearance-none border-2 rounded w-full py-2 px-3 border-amber-900 bg-orange-100 leading-tight focus:outline-none focus:shadow-outline"
                 />
                 {/* <input
@@ -59,6 +104,7 @@ export default function AddProduct() {
                   className="my-3 border-2 rounded resize-none w-full h-full py-2 px-3 border-amber-900 bg-orange-100 "
                   placeholder="Description Product"
                   name="desc"
+                  onChange={handleChange}
                   >
                   </textarea>
 
@@ -71,10 +117,10 @@ export default function AddProduct() {
                 <input
                   className=" mt-5 form-control w-full px-3 text-base font-normal border-none rounded transition ease-in-out focus:text-red-700 focus:bg-none focus:border-blue-600 focus:outline-none"
                   type="file"
-                  id="file"
+                  id="upload"
                   name="image"
                   hidden
-                  // onChange={handleChange}
+                  onChange={handleChange}
                   />
                 </label>
               </div>
@@ -87,9 +133,20 @@ export default function AddProduct() {
           </form>
         </div>
 
-        <div className="ml-8">
-          <div className="h-96">
-            <img className="object-fill h-full" src="./assets/product1.png" alt="" />
+        <div className="ml-8 mt-9">
+          <div className="h-full">
+            {/* <img className="object-fill h-full" src="./assets/product1.png" alt="" /> */}
+            {preview && (
+                <img
+                  src={preview}
+                  // style={{
+                  //   maxWidth: "150px",
+                  //   maxHeight: "150px",
+                  //   objectFit: "cover",
+                  // }}
+                  alt={preview}
+                />
+            )}
           </div>
         </div>
       </div>

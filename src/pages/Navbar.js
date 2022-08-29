@@ -3,7 +3,7 @@ import React from 'react'
 export default function Navbar({showup, handleShow, toggle}) {
   return (
     <div
-      className="flex items-center bg-stone-100 justify-between shadow-2xl h-[80px] px-20">
+      className="flex mb-10 items-center bg-stone-100 justify-between shadow-2xl h-[80px] px-20">
       <div className="flex items-center h-10">
         <img src="./assets/iconlogo.png" alt="" className="h-12 cursor-pointer" />
       </div>

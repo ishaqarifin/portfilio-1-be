@@ -1,18 +1,20 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
-export default function CardProduct() {
+export default function CardProduct({item}) {
   return (
     <div className="overflow-hidden m-auto bg-red-100">
-      <Link to={'/detail'}>
-      <img className="w-fit" src="./assets/product1.png" alt="Mountain" />
+      <Link to={'/detail/'+ item.id}
+      // key={index}
+      >
+      <img className="w-fit" src={item.image} alt="Mountain" />
       <div className="px-4 py-4">
-        <div className="font-bold text-xl mb-2">Mountain</div>
+        <div className="font-bold text-xl mb-2">{item.name}</div>
         <p className="text-gray-700 text-base">
-          Rp. 200.000
+          Rp. {item.price}
         </p>
         <p className="text-gray-700 text-base">
-          Stock : 3
+          Stock : {item.qty}
         </p>
       </div>
     </Link>

@@ -1,96 +1,65 @@
-import React from 'react'
-import NavbarLogin from './NavbarLogin'
+import React, { useContext, useEffect } from "react";
+import { UserContext } from "../context/userContext";
+import NavbarLogin from "./NavbarLogin";
+import {io} from 'socket.io-client'
+let socket
 
 export default function ComplaintClient() {
-  
+  const img = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80";
+
+  const [state] = useContext(UserContext)
+  // console.log(state);
+
+  useEffect(() => {
+    socket = io('http://localhost:5000', {
+        auth: {
+            token: localStorage.getItem('token')
+        },
+        // code here
+        query: {
+            id: state.user.id
+        }
+    })
+
+    return () => {
+        socket.disconnect()
+    }
+}, []) // code here
+
   return (
     <>
       <NavbarLogin />
-      <div className="flex-1 p-2 mx-5 pl-5 border-neutral-700 justiwhiteen flex flex-col h-[80vh]">
-        <div id="messages" className="flex flex-col space-y-4 overflow-y-scroll">
-          
-          <div className="chat-message">
-            <div className="flex items-end justify-end">
-              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block bg-neutral-900 text-white ">Are you using sudo?</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="chat-message">
-            <div className="flex items-end justify-end">
-              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-1 items-end">
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block rounded-br-none bg-neutral-900 text-white ">yes, I have a mac. I never had issues with root permission as well, but this helped me to solve the problem</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="chat-message">
-            <div className="flex items-end">
-              <div className="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block bg-neutral-700 text-white">I get the same error on Arch Linux (also with sudo)</span>
-                </div>
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block bg-neutral-700 text-white">I also have this issue, Here is what I was doing until now: #1076</span>
-                </div>
-                <div>
-                  <span className="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-neutral-700 text-white">even i am facing</span>
-                </div>
-              </div>
-              <img
-                src="./assets/a.jpg"
-                alt="My profile"
-                className="w-6 h-6 rounded-full order-1"
-              />
+      <div className="flex container-full mx-auto justify-center space-x-5">
+        <div className="w-1/5">
+          <div className="flex p-2 bg-slate-200 items-center">
+            <img src={img} alt="user" className="rounded-full mr-2 h-14 w-14 items-center" />
+            <div className="">
+              <p>Yes, Is there anyting</p>
+              <p>Yes, Is there anyting</p>
             </div>
           </div>
         </div>
-
-        <div className="border-gray-200 px-4 pt-4 mb-2">
-          <div className="relative flex mb-10">
-            <span className="absolute inset-y-0 flex items-center">
-              <button type="button" className="inline-flex items-center justify-center rounded-full h-12 w-12 transition duration-500 ease-in-out text-gray-500 hover:bg-neutral-700 focuswhite-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
-                </svg>
-              </button>
-            </span>
-            <input type="text" placeholder="Write your message!" className="w-full focus:outline-none focus:placeholder-gray-400 text-white placeholder-white pl-12 bg-neutral-800 rounded-md py-3" />
-            <div className="absolute right-0 items-center inset-y-0 hidden sm:flex">
-              <button type="button" className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-neutral-700 focuswhite-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                </svg>
-              </button>
-              <button type="button" className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-neutral-700 focuswhite-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  ></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-              </button>
-              <button type="button" className="inline-flex items-center justify-center rounded-full h-10 w-10 transition duration-500 ease-in-out text-gray-500 hover:bg-neutral-700 focuswhite-none">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-              </button>
-              <button type="button" className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
-                <span className="font-bold">Send</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-6 w-6 ml-2 transform rotate-90">
-                  <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
-                </svg>
-              </button>
+        {/* <div className='w-1/2 max-h-screen bg-blue-600 ' style={{ height: "80vh" }}>
+          chat
+        </div> */}
+        <div className="flex-col bg-slate-200 w-3/6 rounded-lg px-4">
+          <div style={{ height: "70vh" }} className="overflow-auto py-2">
+            <div className="flex justify-start items-center w-1/2 ">
+              <img src={img} alt="user" className="rounded-full mr-2 h-10 w-10 items-center" />
+              <div className="bg-white rounded-xl p-1">Yes, Is there anyting</div>
             </div>
+          </div>
+          <div className="flex mb-4">
+            <input placeholder="Send Message" className="w-full input-message px-4" />
+            <button type="button" className="inline-flex items-center justify-center rounded-lg px-4 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
+              <span className="font-bold">Send</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-6 w-6 ml-2 transform rotate-90">
+                <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </>
-  )
+  );
 }

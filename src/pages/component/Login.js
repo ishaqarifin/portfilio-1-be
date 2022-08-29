@@ -1,6 +1,83 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { useContext } from 'react'
+import { UserContext } from '../../context/userContext'
+import { useNavigate } from 'react-router-dom'
+import { useMutation } from 'react-query'
+import { API } from '../../config/api'
 
 export default function Login({show, handleClose, handleShow, toggle}) {
+  let navigate = useNavigate()
+  let api = API()
+
+  const [state, dispatch] = useContext(UserContext)
+  console.log(state);
+  const [message, setMessage] = useState(null)
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  })
+
+  const {email, password} = form
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleSubmit = useMutation(async(e) => {
+    try {
+      e.preventDefault()
+      
+      const body = JSON.stringify(form)
+      const config = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      };
+
+      const response = await api.post("/login", config);
+
+      console.log(response);
+
+      // Checking process
+      if (response.status === "success") {
+        // Send data to useContext
+        dispatch({
+          type: "LOGIN_SUCCESS",
+          payload: response.data,
+        });
+        // Status check
+        if (response.data.status === "admin") {
+          navigate("/complain-admin");
+        } else {
+          navigate("/");
+        }
+
+        handleClose()
+      } else {
+        const alert = (
+          <alert variant="danger" className="py-1">
+            Failed success
+          </alert>
+        );
+        setMessage(alert);
+      }
+
+    } catch (error) {
+      const alert = (
+        <alert variant="danger" className="py-1">
+          Login failed
+        </alert>
+      );
+      setMessage(alert);
+      console.log(error);
+    }
+  })
+
   const close = (e)=> {
     if (e.target.id === "modal") handleClose()
   }
@@ -12,17 +89,29 @@ export default function Login({show, handleClose, handleShow, toggle}) {
           
           <div className="relative p-6 flex-auto">
             <h3 className="text-3xl text-amber-900 font-bold">Login</h3>
-            <form className="rounded pt-6 pb-8 w-80">
+            {message && message}
+            <form 
+            onSubmit={(e) => handleSubmit.mutate(e)}
+            className="rounded pt-6 pb-8 w-80"
+            >
               <input 
-                placeholder='Email'
+                type="email"
+                placeholder="Email"
+                value={email}
+                name="email"
+                onChange={handleChange}
                 className="shadow bg-amber-100 border-2 border-orange-900 rounded w-full py-2 px-1 text-black" />
               <input 
-                placeholder='Password'
+                type="password"
+                placeholder="Password"
+                value={password}
+                name="password"
+                onChange={handleChange}
                 className="shadow bg-amber-100 border-2 border-orange-900 rounded w-full py-2 px-1 my-6 text-black" />
+
             <button
               className="text-white w-full bg-amber-900 active:bg-orange-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-              type="button"
-              onClick={handleClose}
+              // type="button"
             >
               Submit
             </button>

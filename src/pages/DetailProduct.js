@@ -1,27 +1,43 @@
 import React from 'react'
+import { useQuery } from 'react-query'
+import { useParams } from 'react-router-dom'
+import { API } from '../config/api'
 import NavbarLogin from './NavbarLogin'
 
 export default function DetailProduct() {
+  // let navigate = useNavigate()
+  let api = API()
+  let {id} = useParams()
+
+  let { data: product } = useQuery("Cache", async () => {
+    const config = {
+      method: "GET",
+      headers: {
+        Authorization: "Basic " + localStorage.token,
+      },
+    };
+    const response = await api.get("/product/" + id, config);
+    return response.data;
+  });
+
   return (
     <>
       <NavbarLogin />
       <div className="flex justify-center mt-16">
         <div className="mr-8">
           <div className="h-96">
-            <img className="object-fill h-full" src="./assets/product1.png" alt="" />
+            <img className="object-fill h-full" src={product?.image} alt="" />
           </div>
         </div>
         <div className="">
           <div className="w-96">
-            <h5 className="text-red-500 text-3xl font-bold">Title</h5>
-            <p className=" text-base mb-3">Stock : 23</p>
+            <h5 className="text-red-500 text-3xl font-bold">{product?.name}</h5>
+            <p className=" text-base mb-3">Stock : {product?.qty}</p>
             <p className="h-32 bg-slate-300  overflow-hidden text-sm text-justify my-6">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, placeat, ea repellendus aut excepturi eveniet sunt deserunt quod voluptates quidem nulla sed magnam asperiores expedita deleniti? Sit autem dolor rerum.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, placeat, ea repellendus aut excepturi eveniet sunt deserunt quod voluptates quidem nulla sed magnam asperiores expedita deleniti? Sit autem dolor rerum.
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati, placeat, ea repellendus aut excepturi eveniet sunt deserunt quod voluptates quidem nulla sed magnam asperiores expedita deleniti? Sit autem dolor rerum.
+              {product?.desc}
             </p>
             <br />
-            <p className="text-red-500 text-xl text-right font-bold mb-3">Rp. 100000</p>
+            <p className="text-red-500 text-xl text-right font-bold mb-3">Rp. {product?.price}</p>
           </div>
             <div 
               // onClick={(e) => handleBuy.mutate(e)}
