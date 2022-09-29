@@ -1,13 +1,13 @@
-import React from 'react'
-import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
-import { API } from '../config/api'
-import NavbarLogin from './NavbarLogin'
+import React from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { API } from "../../config/api";
+import NavbarLogin from "../navbar/NavbarLogin";
 
 export default function DetailProduct() {
   // let navigate = useNavigate()
-  let api = API()
-  let {id} = useParams()
+  let api = API();
+  let { id } = useParams();
 
   let { data: product } = useQuery("Cache", async () => {
     const config = {
@@ -33,19 +33,18 @@ export default function DetailProduct() {
           <div className="w-96">
             <h5 className="text-red-500 text-3xl font-bold">{product?.name}</h5>
             <p className=" text-base mb-3">Stock : {product?.qty}</p>
-            <p className="h-32 bg-slate-300  overflow-hidden text-sm text-justify my-6">
-              {product?.desc}
-            </p>
+            <p className="h-32 bg-slate-300  overflow-hidden text-sm text-justify my-6">{product?.desc}</p>
             <br />
             <p className="text-red-500 text-xl text-right font-bold mb-3">Rp. {product?.price}</p>
           </div>
-            <div 
-              // onClick={(e) => handleBuy.mutate(e)}
-              className="bg-yellow-500 text-center w-full py-1 mt-5 cursor-pointer font-bold rounded-sm">
-                Add To Cart
-            </div>
+          <div
+            // onClick={(e) => handleBuy.mutate(e)}
+            className="bg-yellow-500 text-center w-full py-1 mt-5 cursor-pointer font-bold rounded-sm"
+          >
+            Add To Cart
+          </div>
         </div>
       </div>
     </>
-  )
+  );
 }

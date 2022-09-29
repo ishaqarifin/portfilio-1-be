@@ -1,30 +1,30 @@
 import React, { useContext, useEffect } from "react";
-import { UserContext } from "../context/userContext";
-import NavbarLogin from "./NavbarLogin";
-import {io} from 'socket.io-client'
-let socket
+import { UserContext } from "../../context/userContext";
+import NavbarLogin from "../navbar/NavbarLogin";
+import { io } from "socket.io-client";
+let socket;
 
 export default function ComplaintClient() {
   const img = "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80";
 
-  const [state] = useContext(UserContext)
+  const [state] = useContext(UserContext);
   // console.log(state);
 
   useEffect(() => {
-    socket = io('http://localhost:5000', {
-        auth: {
-            token: localStorage.getItem('token')
-        },
-        // code here
-        query: {
-            id: state.user.id
-        }
-    })
+    socket = io("http://localhost:5000", {
+      auth: {
+        token: localStorage.getItem("token"),
+      },
+      // code here
+      query: {
+        id: state.user.id,
+      },
+    });
 
     return () => {
-        socket.disconnect()
-    }
-}, []) // code here
+      socket.disconnect();
+    };
+  }); // code here
 
   return (
     <>
